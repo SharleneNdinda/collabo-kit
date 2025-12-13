@@ -16,8 +16,7 @@ class CollaboUser(AbstractUser):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["first_name", "last_name, email"]
 
     class Meta:
         """Model options."""
