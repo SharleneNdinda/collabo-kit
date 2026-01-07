@@ -1,22 +1,24 @@
 from rest_framework import generics, permissions
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.response import Response
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView)
 
-from collabo_kit.users.serializers import UserSerializer
+from collabo_kit.users.serializers import (CustomTokenObtainPairSerializer,
+                                           UserSerializer)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    """View that returns a JWT token."""
+
+    serializer_class = CustomTokenObtainPairSerializer
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    """View that refreshes a JWT token."""
+
+    serializer_class = TokenRefreshSerializer
 
 
 class RegistrationView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
-
-
-class LoginView(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data, context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({"token": token.key})

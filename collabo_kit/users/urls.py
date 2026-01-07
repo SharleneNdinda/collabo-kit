@@ -2,10 +2,11 @@
 
 from django.urls import path
 
-from collabo_kit.users.views import LoginView, RegistrationView
-
+from .views import (CustomTokenObtainPairView, CustomTokenRefreshView,
+                    RegistrationView)
 
 urlpatterns = [
+    path("token/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", CustomTokenRefreshView.as_view(), name="token_refresh"),
     path("register/", RegistrationView.as_view(), name="register"),
-    path("login/", LoginView.as_view(), name="login"),
 ]
